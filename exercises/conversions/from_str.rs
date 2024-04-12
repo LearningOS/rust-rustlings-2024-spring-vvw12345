@@ -31,7 +31,7 @@ enum ParsePersonError {
     ParseInt(ParseIntError),
 }
 
-// I AM NOT DONE
+
 
 // Steps:
 // 1. If the length of the provided string is 0, an error should be returned
@@ -49,11 +49,45 @@ enum ParsePersonError {
 // you want to return a string error message, you can do so via just using
 // return `Err("my error message".into())`.
 
+
+//和上一个题不一样的点在于这次只分割一次是没办法覆盖全部的情况的
 impl FromStr for Person {
     type Err = ParsePersonError;
     fn from_str(s: &str) -> Result<Person, Self::Err> {
+        if s.len() == 0{
+            return Err(ParsePersonError::Empty);
+        }
+
+        let splited:Vec<&str> = s.split(",").collect();
+        match &splited[..]{
+            &[name,_] if name.is_empty() => Err(ParsePersonError::NoName),
+            &[name,age] => match age.parse::<usize>(){
+                Ok(age) => Ok(Person{name:name.to_string(),age:age,}),
+                Err(e) => Err(ParsePersonError::ParseInt(e))
+            }
+            _ => Err(ParsePersonError::BadLen)
+        }
     }
 }
+
+    //     if s.len() == 0{
+    //         return Err(ParsePersonError::Empty);
+    //     }
+    //     match s.split_once(","){
+    //         Some((name,_)) if name.is_empty() => Err(ParsePersonError::NoName),
+    //         //Some((name,_,)) => Err(ParsePersonError::BadLen),
+    //         Some((name,age_str)) => match age_str.parse::<usize>(){
+    //             Ok(age) => Ok(Person{name:name.to_string(),age:age,}),
+    //             Err(e) => match e.split_once(","){
+    //                 None => Err(ParsePersonError::BadLen),
+    //                 OK(e) => Err(ParsePersonError::ParseInt(e))
+    //             }
+    //         }
+    //         None => Err(ParsePersonError::BadLen)
+
+    //     }
+    // }
+
 
 fn main() {
     let p = "Mark,20".parse::<Person>().unwrap();
