@@ -3,7 +3,7 @@
 	This problem requires you to implement a basic interface for a binary tree
 */
 
-//I AM NOT DONE
+
 use std::cmp::Ordering;
 use std::fmt::Debug;
 
@@ -50,13 +50,47 @@ where
 
     // Insert a value into the BST
     fn insert(&mut self, value: T) {
-        //TODO
+        let mut node = &mut self.root;
+        loop{
+            if node.is_none(){ //如果根节点为空，那就直接插入
+                *node = Option::Some(Box::new(TreeNode::new(value)));
+                return;
+            }else{  //根节点就已经匹配了，可以返回
+                if node.as_ref().unwrap().value == value{
+                    return;
+                }
+            }
+
+            if node.as_ref().unwrap().value >= value{
+                let left = &mut node.as_mut().unwrap().left;
+                node = left;
+            }else{
+                let right = &mut node.as_mut().unwrap().right;
+                node = right;
+            }
+        }
     }
 
     // Search for a value in the BST
     fn search(&self, value: T) -> bool {
-        //TODO
-        true
+        let mut node = &self.root;
+        loop{
+            if node.is_none(){
+                return false;
+            }else{
+                if node.as_ref().unwrap().value == value{
+                    return true;
+                }
+            }
+            if node.as_ref().unwrap().value >= value{
+                let left = &node.as_ref().unwrap().left;
+                node = left;
+            }else{
+                let right = &node.as_ref().unwrap().right;
+                node = right;
+            }
+        }
+        
     }
 }
 
@@ -65,7 +99,7 @@ where
     T: Ord,
 {
     // Insert a node into the tree
-    fn insert(&mut self, value: T) {
+    fn insert(&mut self, _value: T) {
         //TODO
     }
 }
