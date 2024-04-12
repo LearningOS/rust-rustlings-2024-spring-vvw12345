@@ -2,11 +2,11 @@
 	single linked list merge
 	This problem requires you to merge two ordered singly linked lists into one ordered singly linked list
 */
-// I AM NOT DONE
+
 
 use std::fmt::{self, Display, Formatter};
 use std::ptr::NonNull;
-use std::vec::*;
+//use std::vec::*;
 
 #[derive(Debug)]
 struct Node<T> {
@@ -29,13 +29,19 @@ struct LinkedList<T> {
     end: Option<NonNull<Node<T>>>,
 }
 
-impl<T> Default for LinkedList<T> {
+impl<T> Default for LinkedList<T> 
+    where
+    T : PartialEq + PartialOrd + Clone
+{
     fn default() -> Self {
         Self::new()
     }
 }
 
-impl<T> LinkedList<T> {
+impl<T> LinkedList<T> 
+    where
+        T : PartialEq + PartialOrd + Clone
+{
     pub fn new() -> Self {
         Self {
             length: 0,
@@ -69,14 +75,37 @@ impl<T> LinkedList<T> {
             },
         }
     }
-	pub fn merge(list_a:LinkedList<T>,list_b:LinkedList<T>) -> Self
+	pub fn merge(mut list_a:LinkedList<T>,mut list_b:LinkedList<T>) -> Self
 	{
-		//TODO
-		Self {
-            length: 0,
-            start: None,
-            end: None,
+		let mut result = LinkedList::new();
+        let mut index_a = 0;
+        let mut index_b = 0;
+        
+        //循环检索直到一个列表耗尽
+        while let (Some(value_a),Some(value_b)) = (list_a.get(index_a),list_b.get(index_b)){
+            if value_a <= value_b{
+                result.add(value_a.clone());
+                index_a += 1;
+            }else{
+                result.add(value_b.clone());
+                index_b += 1;
+            }
         }
+
+        //如果list_a里面还有剩余的元素的话，全部加进结果的列表
+        while let Some(value_a) = list_a.get(index_a){
+            result.add(value_a.clone());
+            index_a += 1;
+        }
+
+        //如果list_b里面还有剩余的元素，全部加入到结果列表
+        while let Some(value_b) = list_b.get(index_b) {
+            result.add(value_b.clone());
+            index_b += 1;
+        }
+        
+        result
+		
 	}
 }
 

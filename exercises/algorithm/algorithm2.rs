@@ -73,7 +73,12 @@ impl<T> LinkedList<T> {
         }
     }
 	pub fn reverse(&mut self){
-		// TODO
+		let mut index_a = 0;
+        let mut index_b = self.length;
+
+        while let (Some(value_a),Some(value_b)) = (self.get(index_a),self.get(index_b)){
+            
+        }
 	}
 }
 
